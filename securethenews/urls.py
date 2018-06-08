@@ -18,7 +18,6 @@ urlpatterns = [
     url(r'^search/$', search_views.search, name='search'),
 
     url(r'^sites/', include('sites.urls')),
-    url(r'^pledge/', include('pledges.urls')),
     url(r'^news/', include('blog.urls')),
     url(r'^api/', include('api.urls')),
 

@@ -4,8 +4,6 @@ from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.text import slugify
 
-from pledges.models import Pledge
-
 
 class ScannedSitesManager(models.Manager):
     def get_queryset(self):
@@ -50,15 +48,6 @@ class Site(models.Model):
         self.full_clean()
         super(Site, self).save(*args, **kwargs)
 
-    @property
-    def pledge(self):
-        """Return the latest approved pledge, or None"""
-        return self.pledges.filter(
-            review_status=Pledge.STATUS_APPROVED
-        ).order_by(
-            '-submitted'
-        ).first()
-
     def to_dict(self):
         """Generate a JSON-serializable dict of this object's attributes,
         including the results of the most recent scan."""
@@ -67,7 +56,6 @@ class Site(models.Model):
             name=self.name,
             domain=self.domain,
             absolute_url=self.get_absolute_url(),
-            pledge=self.pledge.to_dict() if self.pledge else None,
             **self.scans.latest().to_dict()
         )
 
